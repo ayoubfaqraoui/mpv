@@ -18,6 +18,7 @@ local o = {
     debug_trigger_feedback = true,
     debug_trigger_captures_screenshot = true,
     support_daily_show_folders = false,
+    screenshot_capture_mode = "subtitles",
 }
 
 local release_junk_tokens = {
@@ -752,7 +753,12 @@ local function debug_log_parse_result(result)
 end
 
 local function save_screenshot(target_path)
-    local ok, ret = pcall(mp.command_native, {"screenshot-to-file", target_path, "video"})
+    local capture_mode = trim(o.screenshot_capture_mode):lower()
+    if capture_mode == "" then
+        capture_mode = "subtitles"
+    end
+
+    local ok, ret = pcall(mp.command_native, {"screenshot-to-file", target_path, capture_mode})
     if not ok then
         return false, ret
     end
